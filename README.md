@@ -14,7 +14,7 @@ namely *sigmoid*, *hyperbolic tangent (tanh)*, *rectified linear unit (relu)* an
 
 # Usage
 
-The code is divided in three parts.
+The code is divided in four main parts:
 - *vqls.py* contains the class used to exploit the VQLS algorithm and takes inspiration from the VQLS pennylane implementation.
 - *utils.py* contains all the libraries, functions and custom routines used.
 - *vqsplines* is the code to exploit the VQSpline proposed method to  compute the B-spline approximation of the desired activation function.
