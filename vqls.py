@@ -287,11 +287,8 @@ class VQLS:
     def cost_execution(self,params):
         c = self.full_matrix_coeff()
         cost = self.cost_loc(c, params)
-        if self.n_qubits==1:
-            print('current solution',self.solution(params))
-        else:
-            print('current solution',self.solution(params,visualize=False))
-            print("Cost at Step {}: {:9.7f}".format(self.iterations, cost))
+        #print('current solution',self.solution(params,visualize=False))
+        print("Cost at Step {}: {:9.7f}".format(self.iterations, cost))
         self.iterations += 1
         return cost
     
@@ -299,16 +296,8 @@ class VQLS:
     def train(self,max_iter):
         #init
         np.random.seed(self.rng_seed)
-        if self.n_qubits==5:
-            w = np.full(14, pi, requires_grad=True)
-        elif self.n_qubits==4:
-            #w = np.full(13, 0,requires_grad=True)
-            w = self.q_delta * np.random.randn(13, requires_grad=True)
-
-        elif self.n_qubits==3:
+        if self.n_qubits==3:
             w = np.full(9, -pi,requires_grad=True)
-            #w = np.array([-3.51490929, -2.52479201, -2.55509258, -3.20200665, -2.69075901, -3.42467655,
-            #-3.16547592, -4.30301443, -3.63697208])
         else:
             w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
         #opt
@@ -335,29 +324,7 @@ class VQLS:
             print(qml.draw(state_vector)(params))
 
         return state_vector(params)
-
-    """
-    def direct_prod(self,params,x,visualize=False):     
-        #Variational + Inner Prod Circuit
-        dev_v = qml.device("default.qubit", wires=self.n_qubits, shots=self.n_shots)
-        @qml.qnode(dev_v)
-        def prod(weights,x):
-            x = x / np.linalg.norm(x)
-            self.variational_block(weights) #variational block to estimate coefficients
-            #qml.adjoint(qml.AmplitudeEmbedding)(x,wires=0,pad_with=1.0) #points encoding
-            qml.adjoint(qml.MottonenStatePreparation)(x,wires=0)
-            
-            #qml.RZ(pi,wires=0)
-            return qml.state()
-
-        res = prod(params,x)
-        #visualization
-        if visualize:
-            print('Quantum State',res)
-            print(qml.draw(prod)(params,x))
         
-        return res[0].real + res[0].imag
-    """
     def direct_prod2(self,params,x,visualize=False):     
         #Variational + Inner Prod Circuit
         dev_v = qml.device("default.qubit", wires=self.n_qubits, shots=self.n_shots)
@@ -377,7 +344,6 @@ class VQLS:
                 self.four_ansatz(weights)
                 qml.adjoint(qml.MottonenStatePreparation)(x,wires=[0,1,2,3])
                 
-            #qml.adjoint(qml.MottonenStatePreparation)(x,wires=0)
             if x[1]<0 and self.n_qubits==1:
                 qml.RZ(pi,wires=0)
             return qml.state()

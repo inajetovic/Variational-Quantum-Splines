@@ -13,12 +13,12 @@ import time
 lower = 0.
 upper = 1. 
 n_step = 8
-f_i = .0  #.12elu 1. tanh
+f_i = 0.0  #.12elu 1. tanh
 
 scaled=False
 
-label = 'tanh_t'
-func = tanh_t
+label = 'sigmoid_t'
+func = sigmoid_t
 
 
 

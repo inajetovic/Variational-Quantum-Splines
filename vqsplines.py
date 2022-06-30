@@ -13,7 +13,7 @@ lower = -1.
 upper = 1. 
 step = .1
 
-y_norm=True
+y_norm=False
 point_norm=False
 
 both = False
@@ -61,7 +61,7 @@ for i in range(len(M)):
     y = Y[i]
     if y == [0.0, 0.0]:
         #y = [el + 10 ** -4 for el in y]
-        y = [.000001, 0.00001]
+        y = [.000001, 0.00001] # the relu case
     matrix = m
     vector = y
     
