@@ -18,6 +18,8 @@ point_norm=False
 
 both = False
 
+visualize_k_numb=False
+
 #elu 0.1,0.0, relu 0.0 0.0, tanh 1. 1.0
 f_i = .0
 f_e = .0
@@ -111,14 +113,12 @@ X = []
 for i in range(1, len(interval)):
     X.append(np.arange(interval[i - 1], interval[i], step - 0.01).tolist())
 
-
 #############################################################################################
 ######################################## Inner Product ######################################
 #############################################################################################
 
 qc_full = []
 classic_prod = []
-hybrid_prod=[]
 print('Classic and Quantum Product estimation..')
 for i in range(len(X)):
     print('Index',i)
@@ -143,8 +143,6 @@ for i in range(len(X)):
             print('norm',norm)
 
         qc_full.append(vqls_circuit.direct_prod2(q_weights[i],point,visualize=True)*norm)  
-        #hybrid
-        hybrid_prod.append(beta_q[i][0]+x*beta_q[i][1])
 
 x = [item for sublist in X for item in sublist]
 y = [func(value,f_e) for value in x]
@@ -153,7 +151,6 @@ if label == 'tanh':
     qc_full = [q - 0.2 for q in qc_full] 
 if label == 'elu':
     classic_prod = [c -f_i for c in classic_prod]
-    hybrid_prod = [c -f_i for c in hybrid_prod]
     qc_full = [c-f_i for c in qc_full]
 
 rss_full = np.sum(np.square(np.array(y) - np.array(qc_full)))
@@ -175,35 +172,17 @@ y1=[i for j,i in enumerate(y) if j%2==0]
 fig, ax = plt.subplots(figsize=(6, 5))
 ax.plot(x, classic_prod, color='orange', label='Classic spline',zorder=1)  
 ax.plot(x, qc_full, color='steelblue',label=type + ' Qspline') 
-#ax.plot(x, y, label='Activation', color='sienna', linestyle='dotted', dashes=(1, 1.5), zorder=2,
-#            linewidth=3)
 ax.scatter(x1,y1,color='sienna',s=10)
 
 ax.grid(alpha=0.3)
-#ax.text(0.65, 0.1, func,transform=ax.transAxes, ha="left")
 plt.legend(loc='best')
 plt.show()
 plt.close()
 
-type = 'Hybrid'
-fig, ax = plt.subplots(figsize=(6, 5))
-ax.plot(x, classic_prod, color='orange', label='Classic spline',zorder=1)  
-ax.plot(x, hybrid_prod, color='steelblue',label=type + ' Qspline') 
-#ax.plot(x, y, label='Activation', color='sienna', linestyle='dotted', dashes=(1, 1.5), zorder=2,
-#linewidth=3)
-ax.scatter(x1,y1,color='sienna',s=10)
-ax.grid(alpha=0.3)
-#ax.text(0.65, 0.1, func,transform=ax.transAxes, ha="left")
-plt.legend(loc='best')
-plt.show()
-plt.close()
-
-fig, ax = plt.subplots(figsize=(6, 5))
-ax.scatter(x_cond, k_list, color='cornflowerblue', label='ConditionNumber', s=10)
-ax.grid(alpha=0.3)
-#ax.text(0.65, 0.1, func,transform=ax.transAxes, ha="left")
-plt.legend(loc='best')
-plt.show()
-plt.close()
-
-print(len(y))
+if visualize_k_numb:
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.scatter(x_cond, k_list, color='cornflowerblue', label='ConditionNumber', s=10)
+    ax.grid(alpha=0.3)
+    plt.legend(loc='best')
+    plt.show()
+    plt.close()
