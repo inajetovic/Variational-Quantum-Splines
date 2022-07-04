@@ -12,10 +12,10 @@ a fault-tolerant model to a NISQ one.
 In the second part a new methodology is proposed, in order to tackle the same problem in a more generalized way and overcome many limitations of the previous works. Just like the QSplines method 4 activation functions are studied,
 namely *sigmoid*, *hyperbolic tangent (tanh)*, *rectified linear unit (relu)* and *exponential linear unit (elu)*.
 
-# Usage
+### Usage
 
 The code is divided in four main parts:
-- *vqls.py* contains the class used to exploit the VQLS algorithm and takes inspiration from the VQLS pennylane implementation.
+- *vqls.py* contains the class used to exploit the VQLS algorithm and takes inspiration from the VQLS pennylane implementation [https://pennylane.ai/qml/demos/tutorial_vqls.html].
 - *utils.py* contains all the libraries, functions and custom routines used.
 - *vqsplines* is the code to exploit the VQSpline proposed method to  compute the B-spline approximation of the desired activation function.
 - *gvqsplines* is the code to exploit the GVQSpline proposed method to  compute the B-spline approximation of the desired activation function.
