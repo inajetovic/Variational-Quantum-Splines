@@ -13,12 +13,12 @@ lower = -1.
 upper = 1. 
 step = .1
 
+# "denormalizations" options. only for visualize the penalties
 y_norm=False
 point_norm=False
-
 both = False
 
-visualize_k_numb=False
+visualize_k_numb=False #tu visualize the condition number plot 
 
 #elu 0.1,0.0, relu 0.0 0.0, tanh 1. 1.0
 f_i = .0
@@ -98,16 +98,7 @@ for i in range(len(M)):
     print('beta_classic                 :',c)
     c_coeff.append(c)
 
-df = pd.DataFrame(columns=['lower', 'upper'])
-
-for m in M:
-    row = [m[1][0], m[1][1]]
-    row = pd.Series(row, index=df.columns)
-    df = df.append(row, ignore_index=True)
-
-interval = df.lower.tolist() + df.upper.tolist()
-interval = list(dict.fromkeys(interval))
-
+interval =x
 # Sampling points within intervals
 X = []
 for i in range(1, len(interval)):
@@ -156,7 +147,7 @@ if label == 'elu':
 rss_full = np.sum(np.square(np.array(y) - np.array(qc_full)))
 print('RSS:',rss_full)
 
-print('condition_numbers',k_list)
+#print('condition_numbers',k_list)
 
 
 #############################################################################################
@@ -164,7 +155,7 @@ print('condition_numbers',k_list)
 #############################################################################################
                                                     
 type = 'Full'
-x_cond = (df.lower + df.upper) / 2
+x_cond = [(X[i][0]+X[i][1])/2 for i in range(len(X))]
 
 x1=[i for j,i in enumerate(x) if j%2==0]
 y1=[i for j,i in enumerate(y) if j%2==0]
