@@ -3,12 +3,8 @@ import math
 from scipy.linalg import block_diag
 from scipy.interpolate import splrep
 
-
-def fidelty(vqls,ref):
-    
-    vqls_normed = vqls/np.linalg.norm(vqls)
-    ref_normed = ref/np.linalg.norm(ref)
-    return np.abs(vqls_normed.conj().dot(ref_normed)) ** 2
+def sin_m(x,z=2):
+    return 1/2*math.sin(x*pi*2)+1/2
 
 def elu(z, c = 0, alpha = .3):
 	return c + z if z >= 0 else c + alpha*(math.e**z -1)
@@ -47,32 +43,43 @@ def sigmoid(x, c=0):
     return c + 1 / (1 + exp(-4 * x))
 
 def B(x, k, i, t): #from DeBoor/scipy
-   #print('x',x)
-   #print('k',k) 
-   #print('index',i)
+
    if k == 0:
-      #print('k==0')
       return 1.0 if t[i] <= x < t[i+1] else 0.0
 
    if t[i+k] == t[i]:
-      #print('t[i+k] == t[i]')
       c1 = 0.0
    else:
-      #print('t[i+k] != t[i]')
       c1 = (x - t[i])/(t[i+k] - t[i]) * B(x, k-1, i, t)
 
    if t[i+k+1] == t[i+1]:  
-      #print('t[i+k+1] == t[i+1]')
       c2 = 0.0
    else:
-      #print('t[i+k+1] != t[i+1]')   
       c2 = (t[i+k+1] - x)/(t[i+k+1] - t[i+1]) * B(x, k-1, i+1, t)
 
-   #print('c1',c1)
-   #print('c2',c2)
+
    return c1 + c2
 
-def GeneralizedVQS_System(n_steps,func,f_i,inputs,samples,scaled=False):
+def GeneralizedVQS_System(n_steps,label,inputs,samples,scaled=False):
+
+    """
+    n_steps: K (dimensionality of the problem)
+    func(string): Activation (or Any non linear) function) 
+        -sigmoid
+        -tanh
+        -elu
+        -relu
+    inputs: X
+    samples: xx
+    scaled: tackle func's Y outputs, with norm equal to 1.
+    """
+
+    func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':.0}
+    func_out = {'sigmoid': sigmoid_t,'tanh': tanh_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}
+
+    
+    f_i = func_dict[label]
+    func = func_out[label]
         
     #Knots List
     T = [inputs[0]]
@@ -83,6 +90,9 @@ def GeneralizedVQS_System(n_steps,func,f_i,inputs,samples,scaled=False):
     print('T dim',len(T))
     print('x_dim',len(inputs))
 
+    #Problem Condition check
+    assert n_steps == len(T) - 2
+
     #S matrix and y
     matrix=[]
     vector=[]
@@ -92,11 +102,10 @@ def GeneralizedVQS_System(n_steps,func,f_i,inputs,samples,scaled=False):
         for i in range(n):
             row.append(B(el, 1, i, T))
         matrix.append(row)
-        if scaled:
-            vector.append(func(el,f_i)/1.88)
-            # vector = vector / np.linalg.norm(vector)
-        else:
-            vector.append(func(el,f_i))
+        vector.append(func(el,f_i))
+
+    if scaled:
+        vector = vector / np.linalg.norm(vector)
 
     matrix[n_steps-1][n_steps-1]=1.0 
     matrix = np.array(matrix)

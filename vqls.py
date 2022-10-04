@@ -237,6 +237,7 @@ class VQLS:
 
     def Sk_coefficients(self,m):
         """
+        Finds the coefficients for the VQS 2x2 matrices
         input m: 2x2 matrix
         output c: coefficients needed to build the matrix Sk by means of quantum circuits
         with the function A_c.
@@ -263,11 +264,20 @@ class VQLS:
         return np.array(c)
 
     def Sk_coefficients_v2(self,m):
+        """
+        Finds the coefficients for the GVQS 2x2 matrices
+
+        """
+        #let's take the elements from the column of the matrix m
+        # Sk = | 1-a  a |
+        #      | 0  1-b |
+
+        # Sk = c_0*I + c_1*Pauli_X + c_2*Pauli_Z + c_3*RY(3*pi)
+
         a=m[0][1]  
         b=1.- m[1][1]
 
         c=[]
-        # Sk = c_0*I + c_1*Pauli_X + c_2*Pauli_Z + c_3*RY(3*pi)
         c.append(1.-a/2 -b/2)
         c.append(a/2)
         c.append((b-a)/2)
@@ -297,7 +307,9 @@ class VQLS:
         #init
         np.random.seed(self.rng_seed)
         if self.n_qubits==3:
-            w = np.full(9, -pi,requires_grad=True)
+            w = np.full(9, -pi, requires_grad=True)
+        elif self.n_qubits==4:
+            w = np.full(13, pi/2, requires_grad=True)
         else:
             w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
         #opt
