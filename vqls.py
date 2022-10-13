@@ -10,17 +10,18 @@ from scipy.optimize import minimize
 #print(qml.__version__)
 
 class VQLS:
-    def __init__(self,matrix,vector, n_qubits,opt ="COBYLA"):
+    def __init__(self,matrix,vector, n_qubits,opt ="COBYLA", seed = 42):
         self.matrix = matrix
         self.vector = vector
         self.n_qubits = n_qubits
         self.tot_qubits = n_qubits + 1  
         self.ancilla_idx = n_qubits  
         self.q_delta = 0.01
-        self.n_shots = 10 ** 6
+        self.n_shots = 512#10 ** 6
         self.rng_seed = 0 
         self.iterations = 0
         self.opt = opt
+        self.cost_vals = []
 
     # circuit, and his adjoint, to prepare the state |b> = |yk> from b = yk = v_norm 
     def U_b(self, adjoint=False):
@@ -69,7 +70,8 @@ class VQLS:
         # A very minimal variational circuit.
         for idx, element in enumerate(weights):
             qml.RY(element, wires=idx)
-    
+
+    #These funcitons can be refactored following the code at https://qiskit.org/textbook/ch-paper-implementations/vqls.html
     def three_ansatz(self,weights):
         qml.RY(weights[0],wires=0)
         qml.RY(weights[1],wires=1)
@@ -117,7 +119,6 @@ class VQLS:
         qml.RY(weights[11],wires=2)
         qml.RY(weights[12],wires=3)
         qml.RY(weights[13],wires=4)
-
 
     def four_ansatz(self,weights):
 
@@ -197,7 +198,7 @@ class VQLS:
 
             # Second Hadamard gate applied to the ancillary qubit.
             qml.Hadamard(wires=self.ancilla_idx)
-
+            
             # Expectation value of Z for the ancillary qubit.
             return qml.expval(qml.PauliZ(wires=self.ancilla_idx))
         
@@ -299,6 +300,7 @@ class VQLS:
         cost = self.cost_loc(c, params)
         #print('current solution',self.solution(params,visualize=False))
         print("Cost at Step {}: {:9.7f}".format(self.iterations, cost))
+        self.cost_vals.append(cost)
         self.iterations += 1
         return cost
     
@@ -313,7 +315,7 @@ class VQLS:
         else:
             w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
         #opt
-        out = minimize(self.cost_execution, x0=w, method=self.opt, options={"maxiter": max_iter})
+        out = minimize(self.cost_execution, x0=w, method=self.opt, options={"maxiter": max_iter, "tol":0.01})
         out_params = out["x"]
         print('Final cost function',self.cost_execution(out_params))
         print('Number of steps',self.iterations)
@@ -367,5 +369,3 @@ class VQLS:
             print(qml.draw(prod)(params,x))
         
         return res[0].real  
-
-

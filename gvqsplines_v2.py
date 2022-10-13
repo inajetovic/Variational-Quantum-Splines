@@ -12,10 +12,15 @@ import time
 
 lower = 0.
 upper = 1. 
-n_step = 8
+n_step = 16
 f_i = 0.0  
-MAX_ITER = 200
-nq=3
+MAX_ITER = 30
+
+nq=4
+# K = 2^n = dim(T)-2
+# with dim(S) = KxK
+# n = num qubits
+# T = set of knots
 
 scaled=False
 
@@ -92,6 +97,8 @@ print('RSS_h:',rss_hybr)
 #############################################################################################
 ######################################## Visualization ######################################
 #############################################################################################
+import matplotlib
+matplotlib.use('TKAgg')
 
 fig, ax = plt.subplots()
 ax.plot(xx, y_q, color='steelblue', lw=2, alpha=0.7, label='Hybrid Spline ')
@@ -115,5 +122,5 @@ ax.scatter(x,y,color='sienna')
 ax.grid(True)
 
 ax.legend(loc='best')
-
 plt.show()
+

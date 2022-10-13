@@ -86,7 +86,7 @@ def GeneralizedVQS_System(n_steps,label,inputs,samples,scaled=False):
     for el in inputs:
         T.append(el)
 
-    print('Knots list',T)
+    #print('Knots list',T)
     print('T dim',len(T))
     print('x_dim',len(inputs))
 
@@ -109,11 +109,11 @@ def GeneralizedVQS_System(n_steps,label,inputs,samples,scaled=False):
 
     matrix[n_steps-1][n_steps-1]=1.0 
     matrix = np.array(matrix)
-    print(matrix)
-    print(matrix.shape)
+    #print(matrix)
+    #print(matrix.shape)
 
-    print('vector',vector)
+    #print('vector',vector)
     v_norm = vector/np.linalg.norm(vector)
-    print('v-norm',v_norm)    
+    #print('v-norm',v_norm)    
 
     return matrix,vector,v_norm
