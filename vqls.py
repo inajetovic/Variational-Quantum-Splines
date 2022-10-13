@@ -321,7 +321,7 @@ class VQLS:
         print('Number of steps',self.iterations)
         return out_params
     
-    def solution(self,params,visualize=False):
+    def solution(self,params,visualize=False, depth = False):
         dev_v = qml.device("default.qubit", wires=self.n_qubits, shots=self.n_shots)
         @qml.qnode(dev_v)
         def state_vector(weights):
@@ -334,12 +334,17 @@ class VQLS:
             else:
                 self.variational_block(weights)
             return qml.state()
+
+        if depth:
+            specs_func = qml.specs(state_vector)
+            print(specs_func(params)["depth"])
+
         if visualize==True:
-            print(qml.draw(state_vector)(params))
+            print(qml.draw_mpl(state_vector)(params))
 
         return state_vector(params)
         
-    def direct_prod2(self,params,x,visualize=False):     
+    def direct_prod2(self,params,x,visualize=False, depth=False):     
         #Variational + Inner Prod Circuit
         dev_v = qml.device("default.qubit", wires=self.n_qubits, shots=self.n_shots)
         @qml.qnode(dev_v)
@@ -361,11 +366,15 @@ class VQLS:
             if x[1]<0 and self.n_qubits==1:
                 qml.RZ(pi,wires=0)
             return qml.state()
-
         res = prod(params,x)
+
+        if depth:
+            specs_func = qml.specs(prod)
+            print(specs_func(params,x)["depth"])
+
         #visualization
         if visualize:
             print('Quantum State',res)
-            print(qml.draw(prod)(params,x))
+            print(qml.draw_mpl(prod)(params,x))
         
         return res[0].real  
