@@ -299,21 +299,24 @@ class VQLS:
         c = self.full_matrix_coeff()
         cost = self.cost_loc(c, params)
         #print('current solution',self.solution(params,visualize=False))
-        print("Cost at Step {}: {:9.7f}".format(self.iterations, cost))
+        print("\rCost at Step {}: {:9.7f}".format(self.iterations, cost))
         self.cost_vals.append(cost)
         self.iterations += 1
         return cost
     
 
-    def train(self,max_iter):
+    def train(self,max_iter, warm_start= None):
         #init
         np.random.seed(self.rng_seed)
-        if self.n_qubits==3:
+        if warm_start is not None:
+            w = warm_start
+        elif self.n_qubits==3:
             w = np.full(9, -pi, requires_grad=True)
         elif self.n_qubits==4:
             w = np.full(13, pi/2, requires_grad=True)
         else:
             w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
+        print("Starting parameters = {w}")
         #opt
         out = minimize(self.cost_execution, x0=w, method=self.opt, options={"maxiter": max_iter, "tol":0.01})
         out_params = out["x"]
