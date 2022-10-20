@@ -364,8 +364,9 @@ class VQLS:
             if self.n_qubits==4:
                 x = x / np.linalg.norm(x)
                 self.four_ansatz(weights)
-                qml.adjoint(qml.MottonenStatePreparation)(x,wires=[0,1,2,3])
                 
+                qml.adjoint(qml.MottonenStatePreparation)(x,wires=[0,1,2,3])
+
             if x[1]<0 and self.n_qubits==1:
                 qml.RZ(pi,wires=0)
             return qml.state()
@@ -379,5 +380,5 @@ class VQLS:
         if visualize:
             print('Quantum State',res)
             print(qml.draw_mpl(prod)(params,x))
-        
+        print(res)
         return res[0].real  
