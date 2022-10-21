@@ -3,6 +3,8 @@ import math
 from scipy.linalg import block_diag
 from scipy.interpolate import splrep
 
+
+
 def sin_m(x,z=2):
     return 1/2*math.sin(x*pi*2)+1/2
 
