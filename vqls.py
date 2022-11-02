@@ -198,10 +198,15 @@ class VQLS:
 
             # Second Hadamard gate applied to the ancillary qubit.
             qml.Hadamard(wires=self.ancilla_idx)
-            
+
             # Expectation value of Z for the ancillary qubit.
             return qml.expval(qml.PauliZ(wires=self.ancilla_idx))
-        
+        if True:
+            print(params)
+            print()
+            print(self.full_matrix_coeff())
+            print(qml.draw_mpl(local_hadamard_test, expansion_strategy="gradient")())
+        raise Exception
         return local_hadamard_test()
 
     def mu(self,weights, l=None, lp=None, j=None):

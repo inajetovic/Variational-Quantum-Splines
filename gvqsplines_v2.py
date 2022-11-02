@@ -114,5 +114,5 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , f_i =
   #
   #
 
-if __name__=='main':
+if __name__=='__main__':
   train_eval(nq=3, n_step=8, label="sigmoid", MAX_ITER = 100, lower = 0., upper = 1. , f_i = 0.0 , scaled=False)
