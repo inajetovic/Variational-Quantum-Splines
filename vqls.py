@@ -204,7 +204,6 @@ class VQLS:
         if True:
             print(params)
             print()
-            print(self.full_matrix_coeff())
             print(qml.draw_mpl(local_hadamard_test, expansion_strategy="gradient")())
         raise Exception
         return local_hadamard_test()
@@ -385,5 +384,5 @@ class VQLS:
         if visualize:
             print('Quantum State',res)
             print(qml.draw_mpl(prod)(params,x))
-        print(res)
+        #print(res)
         return res[0].real  
