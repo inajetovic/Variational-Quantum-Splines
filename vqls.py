@@ -18,7 +18,8 @@ class VQLS:
         self.ancilla_idx = n_qubits  
         self.q_delta = 0.01
         self.n_shots = 512#10 ** 6
-        self.rng_seed = 0 
+        self.rng_seed = np.random.randint(0, 100)
+        print(self.rng_seed)
         self.iterations = 0
         self.opt = opt
         self.cost_vals = []
@@ -149,7 +150,7 @@ class VQLS:
         qml.RY(weights[12],wires=3)
 
 
-    def vqls_circuit(self,params):
+    def vqls_circuit(self,params,output = False):
         dev_mu = qml.device("default.qubit", wires=self.tot_qubits)
         @qml.qnode(dev_mu)
         def local_hadamard_test():
@@ -201,11 +202,11 @@ class VQLS:
 
             # Expectation value of Z for the ancillary qubit.
             return qml.expval(qml.PauliZ(wires=self.ancilla_idx))
-        if True:
+        if output:
             print(params)
             print()
             print(qml.draw_mpl(local_hadamard_test, expansion_strategy="gradient")())
-        raise Exception
+            raise Exception
         return local_hadamard_test()
 
     def mu(self,weights, l=None, lp=None, j=None):
@@ -308,16 +309,22 @@ class VQLS:
         self.iterations += 1
         return cost
     
+    def __minmaxrand(self,nel,min, max):
+        return np.random.rand(nel)*(max-min)+min
 
     def train(self,max_iter, warm_start= None):
         #init
-        np.random.seed(self.rng_seed)
+        
+        np.random.seed()
         if warm_start is not None:
             w = warm_start
         elif self.n_qubits==3:
-            w = np.full(9, -pi, requires_grad=True)
+            #w = np.full(9, pi/2, requires_grad=True)
+            w = self.__minmaxrand(9, 0, np.pi)
+
         elif self.n_qubits==4:
-            w = np.full(13, pi/2, requires_grad=True)
+            #w = np.full(13, np.random., requires_grad=True)
+            w = self.__minmaxrand(13, 0, np.pi)
         else:
             w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
         print("Starting parameters = {w}")
