@@ -23,6 +23,7 @@ class VQLS:
         self.iterations = 0
         self.opt = opt
         self.cost_vals = []
+        self.testing_product=[]
 
     # circuit, and his adjoint, to prepare the state |b> = |yk> from b = yk = v_norm 
     def U_b(self, adjoint=False):
@@ -307,6 +308,7 @@ class VQLS:
         print("\rCost at Step {}: {:9.7f}".format(self.iterations, cost))
         self.cost_vals.append(cost)
         self.iterations += 1
+        self.testing_product.append(params)
         return cost
     
     def __minmaxrand(self,nel,min, max):
@@ -327,7 +329,7 @@ class VQLS:
             w = self.__minmaxrand(13, 0, np.pi)
         else:
             w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
-        print("Starting parameters = {w}")
+        print(f"Starting parameters = {w}")
         #opt
         out = minimize(self.cost_execution, x0=w, method=self.opt, options={"maxiter": max_iter, "tol":0.01})
         out_params = out["x"]
