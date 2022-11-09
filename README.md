@@ -1,3 +1,29 @@
+# Running the repeated experimental setting
+Install requirement.txt with python 3
+
+Run the ``` exper_run.py ``` script with the fololowing command line paramters
+- ``` -sp ``` name of the saving file and path (NOTE the results will be saved with json formatting)
+- ```-mi ``` maximum number of iteration for the COBYLA optimizator
+- ``` -en``` number of experiments to launch
+- ```-func``` name of the function to approximate, canbe choosen between _sigmoid_ _tanh_, _elu_,_relu_, and _sin_.
+- ```-nq``` number of qubits 
+- ```-h``` outputs list of possible parameters
+
+Running the script without any parameter is the same as running:
+```
+python exper_run.py -sp results.json -mi 300 -en 25 -func sigmoid -nq 3
+```
+
+The saved file is a Dataset containing the following features:
+- Condition number ```float``` 
+- norm(yk)  ```float```
+- training_cost ```list[float]```
+- exe_time ```float``` (seconds)
+- in_train_weight ```list[list[float]]```
+- RSS_q ``float``
+- RSS_h `float`
+- seed `int`
+
 # VQSplines and GVQSplines 
 
 (WORK IN PROGRESS)

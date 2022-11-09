@@ -23,7 +23,7 @@ func = sigmoid_t
 
 
 x = np.arange(lower, upper + .03, (upper-lower)/n_step).tolist() 
-print('x',x)
+#print('x',x)
 xx = np.linspace(lower, upper, n_step) ##inputs sampling in the interval 0,1
 y = [func(value,f_i) for value in x]
 
@@ -32,9 +32,9 @@ if scaled:
   y = y / norm
 
 tck=splrep(x,y,k=1) #coeffs
-print('scipy knots',tck[0])
-print('scipy coeffs',tck[1])
-print('xx',xx)
+#print('scipy knots',tck[0])
+#print('scipy coeffs',tck[1])
+#print('xx',xx)
 
 #############################################################################################
 ############################### Knots and Basis Expansion Matrix ############################
@@ -45,9 +45,9 @@ T = [x[0]]
 for el in x:
     T.append(el)
 
-print('Knots list',T)
-print('T dim',len(T))
-print('x_dim',len(x))
+#print('Knots list',T)
+#print('T dim',len(T))
+#print('x_dim',len(x))
 
 #S matrix and y
 matrix=[]
@@ -58,11 +58,11 @@ for j,el in enumerate(xx):
    for i in range(n):
        row.append(B(el, 1, i, T))
    
-   print(j)
-   print(row)
+   #print(j)
+   #print(row)
    matrix.append(row)
    n_row = row/ np.linalg.norm(row)
-   print('Norm of the row',n_row)
+   #print('Norm of the row',n_row)
    vector.append(func(el,f_i))
 if scaled:
   vector = vector / np.linalg.norm(vector)

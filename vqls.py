@@ -10,7 +10,7 @@ from scipy.optimize import minimize
 #print(qml.__version__)
 
 class VQLS:
-    def __init__(self,matrix,vector, n_qubits,opt ="COBYLA", seed = 42):
+    def __init__(self,matrix,vector, n_qubits,opt ="COBYLA", seed = None):
         self.matrix = matrix
         self.vector = vector
         self.n_qubits = n_qubits
@@ -18,12 +18,16 @@ class VQLS:
         self.ancilla_idx = n_qubits  
         self.q_delta = 0.01
         self.n_shots = 512#10 ** 6
-        self.rng_seed = np.random.randint(0, 100)
-        print(self.rng_seed)
+        if seed is None:
+            np.random.seed()
+            self.rng_seed = np.random.randint(0, 100)
+        else:
+            self.rng_seed = seed
+        #print(self.rng_seed)
         self.iterations = 0
         self.opt = opt
         self.cost_vals = []
-        self.testing_product=[]
+        self.weight_history=[]
 
     # circuit, and his adjoint, to prepare the state |b> = |yk> from b = yk = v_norm 
     def U_b(self, adjoint=False):
@@ -305,10 +309,12 @@ class VQLS:
         c = self.full_matrix_coeff()
         cost = self.cost_loc(c, params)
         #print('current solution',self.solution(params,visualize=False))
-        print("\rCost at Step {}: {:9.7f}".format(self.iterations, cost))
-        self.cost_vals.append(cost)
+        #print("\rCost at Step {}: {:9.7f}".format(self.iterations, cost))
+        self.cost_vals.append(cost.item())
         self.iterations += 1
-        self.testing_product.append(params)
+        #print(params)
+        #print(type(params))
+        self.weight_history.append(params)
         return cost
     
     def __minmaxrand(self,nel,min, max):
@@ -316,8 +322,8 @@ class VQLS:
 
     def train(self,max_iter, warm_start= None):
         #init
-        
-        np.random.seed()
+
+        np.random.seed(self.rng_seed)
         if warm_start is not None:
             w = warm_start
         elif self.n_qubits==3:
@@ -329,12 +335,12 @@ class VQLS:
             w = self.__minmaxrand(13, 0, np.pi)
         else:
             w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
-        print(f"Starting parameters = {w}")
+        #print(f"Starting parameters = {w}")
         #opt
         out = minimize(self.cost_execution, x0=w, method=self.opt, options={"maxiter": max_iter, "tol":0.01})
         out_params = out["x"]
-        print('Final cost function',self.cost_execution(out_params))
-        print('Number of steps',self.iterations)
+        #print('Final cost function',self.cost_execution(out_params))
+        #print('Number of steps',self.iterations)
         return out_params
     
     def solution(self,params,visualize=False, depth = False):

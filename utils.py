@@ -89,8 +89,8 @@ def GeneralizedVQS_System(n_steps,label,inputs,samples,scaled=False):
         T.append(el)
 
     #print('Knots list',T)
-    print('T dim',len(T))
-    print('x_dim',len(inputs))
+    #print('T dim',len(T))
+    #print('x_dim',len(inputs))
 
     #Problem Condition check
     assert n_steps == len(T) - 2
