@@ -14,13 +14,12 @@ import time
 # n = num qubits
 # T = set of knots
 def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , f_i = 0.0 , scaled=False):
-  result = {}
   func_out = {'sigmoid': sigmoid_t,'tanh': tanh_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}
   func = func_out[label]
 
 
   #############################################################################################
-  ###################################### System Preparation ###################################
+  ###################################### System Preparatio and _sin_#################
   #############################################################################################
 
 
@@ -46,20 +45,17 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , f_i =
   result['Condition number']=k_numb
   result['norm(yk)']=np.linalg.norm(vector)
 
-  vqls_circuit = VQLS(matrix,v_norm,nq,opt='COBYLA') 
+  vqls_circuit = VQLS(matrix,v_norm,nq,opt='COBYLA',seed=42) 
 
   start = time.time()
   weights = vqls_circuit.train(max_iter=MAX_ITER)  #########################################
   end = time.time()
   result["training_cost"]=vqls_circuit.cost_vals
   result["exe_time"]= end-start
-  q = vqls_circuit.solution(weights)
-  result['Qcoef']=q
-  result["weights"]=weights
-
+  result["in_train_weights"] = vqls_circuit.weight_history
   #Classic beta coefficients
   c = np.linalg.solve(matrix,vector)
-
+  q = vqls_circuit.solution(weights).real
   #############################################################################################
   ######################################## Inner Product ######################################
   #############################################################################################
@@ -79,8 +75,9 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , f_i =
   rss_full = np.sum(np.square(np.array(y_c) - np.array(y_fq)))
   rss_hybr = np.sum(np.square(np.array(y_c) - np.array(y_q)))
 
-  result['RSS_q']=rss_full
-  result['RSS_h']=rss_hybr
+  result['RSS_q']=rss_full.item()
+  result['RSS_h']=rss_hybr.item()
+  result['seed']=vqls_circuit.rng_seed
   return result
   ##############################################################################################
   ######################################### Visualization ######################################
