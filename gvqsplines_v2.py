@@ -45,7 +45,7 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , f_i =
   result['Condition number']=k_numb
   result['norm(yk)']=np.linalg.norm(vector)
 
-  vqls_circuit = VQLS(matrix,v_norm,nq,opt='COBYLA',seed=42) 
+  vqls_circuit = VQLS(matrix,v_norm,nq,opt='COBYLA') 
 
   start = time.time()
   weights = vqls_circuit.train(max_iter=MAX_ITER)  #########################################
