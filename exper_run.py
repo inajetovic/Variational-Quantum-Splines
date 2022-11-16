@@ -3,18 +3,34 @@ import pandas as pd
 
 def multiple_experiment(nq, path, max_iter, experiment_number, func):
     res = []
+    pd.DataFrame(columns=[  "Condition number",
+                            "norm(yk)",
+                            "training_cost",
+                            "exe_time",
+                            "in_train_weights",
+                            'RSS_q',
+                            'RSS_h',
+                            'seed'
+                          ]).to_json(path)
     pnq = {'3':(3,8),
           '4':(4,16)}
     for i in range(int(experiment_number)):
         print(f"{i}th iteration")
         el = pnq[nq]
-        res.append(train_eval(el[0],el[1], func, max_iter ))
+        df = pd.read_json(path)
+        df = pd.concat([df, pd.DataFrame([train_eval(el[0],el[1], func, max_iter )])], ignore_index = True)
+        
+        #import os
+        #if os.path.isfile(path):
+        #    os.remove(path)
+        df.to_json(path)
+        #res.append(train_eval(el[0],el[1], func, max_iter ), ignore_index = True)
 
 
-    df = pd.DataFrame(res)
+    #df = pd.DataFrame(res)
     
 
-    df.to_json(path)
+    #df.to_json(path)
 
 if __name__=='__main__':   
     import sys
