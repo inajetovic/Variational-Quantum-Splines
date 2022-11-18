@@ -32,6 +32,7 @@ def multiple_experiment(nq, path, max_iter, experiment_number, func):
 
     #df.to_json(path)
 
+
 if __name__=='__main__':   
     import sys
     if '-h' in sys.argv:
@@ -65,5 +66,5 @@ if __name__=='__main__':
     if '-nq' in sys.argv:
         nq = sys.argv[sys.argv.index("-nq")+1]
     else:
-        nq = 3
+        nq = '3'
     multiple_experiment(nq, path, mi, en, func)
