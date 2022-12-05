@@ -20,7 +20,7 @@ class VQLS:
         self.n_shots = 512#10 ** 6
         if seed is None:
             np.random.seed()
-            self.rng_seed = np.random.randint(0, 100)
+            self.rng_seed = np.random.randint(0, 10000)
         else:
             self.rng_seed = seed
         #print(self.rng_seed)
