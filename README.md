@@ -1,3 +1,6 @@
+# Running the second experiment for the tanh function 
+`python exper_run.py -sp results_tanh.json -func tanh`
+
 # Running the repeated experimental setting
 Install requirement.txt with python 3
 
