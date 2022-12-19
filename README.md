@@ -1,3 +1,13 @@
+# Table best models 
+
+| function   |   ('mse', 3) |   ('mse', 4) |   ('RSS_q', 3) |   ('RSS_q', 4) |
+|:-----------|-------------:|-------------:|---------------:|---------------:|  
+| elu        |     0.119763 |    0.0652962 |       0.114745 |      0.0682175 |
+| relu       |     0.216811 |    0.069185  |       0.376055 |      5.32975   |
+| sigmoid    |     0.182906 |    0.30803   |       0.268566 |      1.51812   |
+| sin        |     0.223964 |    0.312243  |       0.40128  |     13.0598    |
+| tanh       |     0.116568 |    0.247158  |       0.108705 |      0.977391  |
+
 # Running the second experiment for the tanh function 
 `python exper_run.py -sp results_tanh.json -func tanh`
 
