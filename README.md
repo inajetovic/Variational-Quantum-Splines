@@ -8,13 +8,10 @@
 | sin        |     0.223964 |    0.312243  |       0.40128  |     13.0598    |
 | tanh       |     0.116568 |    0.247158  |       0.108705 |      0.977391  |
 
-# Running the second experiment for the tanh function 
-`python exper_run.py -sp results_tanh.json -func tanh`
-
 # Running the repeated experimental setting
 Install requirement.txt with python 3
 
-Run the ``` exper_run.py ``` script with the fololowing command line paramters
+Run the ``` run_gvqsplines.py ``` script with the fololowing command line paramters
 - ``` -sp ``` name of the saving file and path (NOTE the results will be saved with json formatting)
 - ```-mi ``` maximum number of iteration for the COBYLA optimizator
 - ``` -en``` number of experiments to launch
@@ -24,7 +21,7 @@ Run the ``` exper_run.py ``` script with the fololowing command line paramters
 
 Running the script without any parameter is the same as running:
 ```
-python exper_run.py -sp results.json -mi 300 -en 25 -func sigmoid -nq 3
+python run_gvqsplines.py -sp results.json -mi 300 -en 25 -func sigmoid -nq 3
 ```
 
 The saved file is a Dataset containing the following features:
