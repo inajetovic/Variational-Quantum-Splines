@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/fi_ippo/anaconda3/envs/qsplines/bin/python"
+    "python.pythonPath": "/home/fi_ippo/anaconda3/envs/qsplines/bin/python",
+    "dad-jokes.duration": "1 min"
 }

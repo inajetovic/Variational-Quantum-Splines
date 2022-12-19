@@ -13,9 +13,7 @@ lower = -1.
 upper = 1. 
 step = .1
 
-# "denormalizations" options. only for visualize the penalties
-y_norm=False
-point_norm=False
+# "denormalizations" options. only for visualize the penalties{'e
 both = False
 
 visualize_k_numb=False #tu visualize the condition number plot 

@@ -61,6 +61,6 @@ if __name__=='__main__':
     if '-sp' in sys.argv:
         path = sys.argv[sys.argv.index("-sp")+1]
     else:
-        path = f"results_{func}_{nq}.json"
+        path = f"results_gvqs_{func}_{nq}.json"
 
     multiple_experiment(nq, path, mi, en, func)

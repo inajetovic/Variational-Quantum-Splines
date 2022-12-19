@@ -406,7 +406,20 @@ class VQLS:
 class qProduct():
     def __init__(self,n_qubits=3):
         self.n_qubits = n_qubits
+        self.n_shots = 1028
     
+    def variational_block(self,weights): 
+        """Variational circuit mapping the ground state |0> to the ansatz state |x>."""
+        # We first prepare an equal superposition of all the states of the computational basis.
+
+        for idx in range(self.n_qubits):
+            qml.Hadamard(wires=idx)
+
+        # A very minimal variational circuit.
+        for idx, element in enumerate(weights):
+            qml.RY(element, wires=idx)
+
+
     def three_ansatz(self,weights):
         qml.RY(weights[0],wires=0)
         qml.RY(weights[1],wires=1)
