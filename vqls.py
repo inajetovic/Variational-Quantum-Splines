@@ -397,7 +397,124 @@ class VQLS:
 
         #visualization
         if visualize:
-            print('Quantum State',res)
-            print(qml.draw_mpl(prod)(params,x))
+            print('Quantum State',res[0])
+            #print(qml.draw_mpl(prod)(params,x))
+        #print(res)
+        return res[0].real  
+
+
+class qProduct():
+    def __init__(self,n_qubits=3):
+        self.n_qubits = n_qubits
+    
+    def three_ansatz(self,weights):
+        qml.RY(weights[0],wires=0)
+        qml.RY(weights[1],wires=1)
+        qml.RY(weights[2],wires=2)
+
+        qml.CZ(wires=[0,1])
+        qml.CZ(wires=[2,0])
+
+        qml.RY(weights[3],wires=0)
+        qml.RY(weights[4],wires=1)
+        qml.RY(weights[5],wires=2)
+
+        qml.CZ(wires=[1,2])
+        qml.CZ(wires=[2,0])
+
+        qml.RY(weights[6],wires=0)
+        qml.RY(weights[7],wires=1)
+        qml.RY(weights[8],wires=2)
+
+    def five_ansatz(self,weights): 
+
+        qml.RY(weights[0],wires=0)
+        qml.RY(weights[1],wires=1)
+        qml.RY(weights[2],wires=2)
+
+        qml.CZ(wires=[0,1])
+        qml.CZ(wires=[2,0])
+
+        qml.RY(weights[3],wires=1)
+        qml.RY(weights[4],wires=2)
+        qml.RY(weights[5],wires=3)
+
+        qml.CZ(wires=[1,2])
+        qml.CZ(wires=[3,1])
+
+        qml.RY(weights[6],wires=2)
+        qml.RY(weights[7],wires=3)
+        qml.RY(weights[8],wires=4)
+
+        qml.CZ(wires=[2,3])
+        qml.CZ(wires=[4,2])
+
+        qml.RY(weights[9],wires=0)
+        qml.RY(weights[10],wires=1)
+        qml.RY(weights[11],wires=2)
+        qml.RY(weights[12],wires=3)
+        qml.RY(weights[13],wires=4)
+
+    def four_ansatz(self,weights):
+
+        qml.RY(weights[0],wires=0)
+        qml.RY(weights[1],wires=1)
+        qml.RY(weights[2],wires=2)
+
+        qml.CZ(wires=[0,1])
+        qml.CZ(wires=[2,0])
+
+        qml.RY(weights[3],wires=1)
+        qml.RY(weights[4],wires=2)
+        qml.RY(weights[5],wires=3)
+
+        qml.CZ(wires=[1,2])
+        qml.CZ(wires=[3,1])
+
+        qml.RY(weights[6],wires=0)
+        qml.RY(weights[7],wires=1)
+        qml.RY(weights[8],wires=2)
+
+        qml.CZ(wires=[0,1])
+        qml.CZ(wires=[2,0])
+
+        qml.RY(weights[9],wires=0)
+        qml.RY(weights[10],wires=1)
+        qml.RY(weights[11],wires=2)
+        qml.RY(weights[12],wires=3)
+
+    def direct_prod2(self,params,x,visualize=False, depth=False):     
+        #Variational + Inner Prod Circuit
+        dev_v = qml.device("default.qubit", wires=self.n_qubits, shots=self.n_shots)
+        @qml.qnode(dev_v)
+        def prod(weights,x):
+            if self.n_qubits==1:
+                self.variational_block(weights) #variational block to estimate coefficients
+                qml.adjoint(qml.AmplitudeEmbedding)(x,wires=0,pad_with=1.0) #points encoding
+
+            if self.n_qubits==3:
+                x = x / np.linalg.norm(x)
+                self.three_ansatz(weights)
+                qml.adjoint(qml.MottonenStatePreparation)(x,wires=[0,1,2])
+    
+            if self.n_qubits==4:
+                x = x / np.linalg.norm(x)
+                self.four_ansatz(weights)
+                
+                qml.adjoint(qml.MottonenStatePreparation)(x,wires=[0,1,2,3])
+
+            if x[1]<0 and self.n_qubits==1:
+                qml.RZ(pi,wires=0)
+            return qml.state()
+        res = prod(params,x)
+
+        if depth:
+            specs_func = qml.specs(prod)
+            print(specs_func(params,x)["depth"])
+
+        #visualization
+        if visualize:
+            print('Quantum State',res[0])
+            #print(qml.draw_mpl(prod)(params,x))
         #print(res)
         return res[0].real  
