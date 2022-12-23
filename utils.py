@@ -6,7 +6,7 @@ from scipy.interpolate import splrep
 
 
 def sin_m(x,z=2):
-    return 1/2*math.sin(x*pi*2)+1/2
+    return 1/2*math.sin(x*pi*z)+1/2
 
 def elu(z, c = 0, alpha = .3):
 	return c + z if z >= 0 else c + alpha*(math.e**z -1)
@@ -76,7 +76,7 @@ def GeneralizedVQS_System(n_steps,label,inputs,samples,scaled=False):
     scaled: tackle func's Y outputs, with norm equal to 1.
     """
 
-    func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':.0}
+    func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':2}
     func_out = {'sigmoid': sigmoid_t,'tanh': tanh_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}
 
     

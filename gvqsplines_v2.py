@@ -16,7 +16,7 @@ import time
 def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , scaled=False):
   func_out = {'sigmoid': sigmoid_t,'tanh': tanh_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}
   func = func_out[label]
-  func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':.0}
+  func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':2}
   f_i = func_dict[label]
 
   #############################################################################################
