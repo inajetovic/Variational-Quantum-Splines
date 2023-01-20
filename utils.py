@@ -16,6 +16,7 @@ def elu_t(z,c=0,alpha = .3):
     if z >= .4:
         res= c + z  -.4
     else:
+        
         res=c + alpha*(math.e**(z-.4) - 1)
 
     return res
