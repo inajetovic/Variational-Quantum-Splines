@@ -10,10 +10,9 @@ import time
 def train_eval(nq, n_step, label, MAX_ITER = 100, lower = -1, upper = 1. , scaled=False, verbose = False):
     optimizer='COBYLA'
     func_out = {'sigmoid': sigmoid,'tanh': tanh,'elu': elu, 'relu': relu, 'sin':sin_m}
-    func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':1}
+    func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':-1}
     step = (upper-lower)/n_step
     result = {}
-    print(nq, n_step, label, MAX_ITER)
 
     
     # function specific 

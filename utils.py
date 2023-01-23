@@ -1,7 +1,21 @@
+from ctypes import ArgumentError
+from sympy import elliptic_f
 from vqls import *
 import math
 from scipy.linalg import block_diag
 from scipy.interpolate import splrep
+
+
+
+
+def get_func(mode = 'gqs'):
+    if(mode == 'gqs') :
+        return  {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':2}, {'sigmoid': sigmoid_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}#'tanh': tanh_t,
+    elif(mode == 'vqs'):
+        return {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':-1}, {'sigmoid': sigmoid,'tanh': tanh,'elu': elu, 'relu': relu, 'sin':sin_m}
+
+    else:
+        raise ArgumentError(f'No mode called {mode}')
 
 
 
@@ -99,7 +113,7 @@ def GeneralizedVQS_System(n_steps,label,inputs,samples,scaled=False):
     #S matrix and y
     matrix=[]
     vector=[]
-    for el in samples:
+    for el in  samples:
         n = len(T) - 2 
         row=[]
         for i in range(n):
