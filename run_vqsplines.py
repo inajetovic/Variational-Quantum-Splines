@@ -34,12 +34,11 @@ if __name__=='__main__':
         - -mi\t\tmaximum number of iteration for the COBYLA optimizator\n\
         - -en\t\tnumber of experiments to launch\n\
         - -func\t\tname of the function to approximate, canbe choosen between _sigmoid_ _tanh_, _elu_,_relu_, and _sin_.\n\
-        - -nq\t\tnumber of qubits\n\
         - -stp\t\tnumber of steps\n\
         - -h \t\tOutputs list of possible parameters\n\
         \n \
         Running the script without any parameter is the same as running:\n \
-        python exper_run.py -sp results_vqs_sigmoid_3_20.json -mi 300 -en 25 -func sigmoid -nq 3 -stp 20')
+        python run_vqsplines.py -sp results_vqs_sigmoid_20.json -mi 300 -en 25 -func sigmoid -stp 20')
         exit()
     if '-mi' in sys.argv:
         mi = sys.argv[sys.argv.index("-mi")+1]
@@ -57,13 +56,9 @@ if __name__=='__main__':
         func = sys.argv[sys.argv.index("-func")+1]
     else:
         func = 'sigmoid'
-    if '-nq' in sys.argv:
-        nq = sys.argv[sys.argv.index("-nq")+1]
-    else:
-        nq = '1'
     if '-sp' in sys.argv:
         path = sys.argv[sys.argv.index("-sp")+1]
     else:
-        path = f"results_vqs_{func}_{nq}_{stp}.json"
+        path = f"results_vqs_{func}_1_{stp}.json"
 
-    multiple_experiment(nq, path, stp, mi, en, func)
+    multiple_experiment('1', path, stp, mi, en, func)
