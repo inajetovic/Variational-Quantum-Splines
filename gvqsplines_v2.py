@@ -13,10 +13,10 @@ import time
 # with dim(S) = KxK
 # n = num qubits
 # T = set of knots
-def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , scaled=False):
-  func_out = {'sigmoid': sigmoid_t,'tanh': tanh_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}
+def train_eval(nq, n_step, label, MAX_ITER = 100, scaled=False):
+  func_dict, func_out, lower, upper = get_func('gqs')
+
   func = func_out[label]
-  func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':2}
   f_i = func_dict[label]
 
   #############################################################################################
@@ -32,7 +32,6 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , scale
     norm = np.linalg.norm(y)
     y = y / norm
 
-  tck=splrep(x,y,k=1) #coeffs
   matrix,vector,v_norm = GeneralizedVQS_System(n_step,label,x,xx,scaled=scaled)
 
 
@@ -80,37 +79,6 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = 0., upper = 1. , scale
   result['RSS_h']=rss_hybr.item()
   result['seed']=vqls_circuit.rng_seed
   return result
-  ##############################################################################################
-  ######################################### Visualization ######################################
-  ##############################################################################################
-  #import matplotlib
-  #matplotlib.use('TKAgg')
-  #
-  #fig, ax = plt.subplots()
-  #ax.plot(xx, y_q, color='steelblue', lw=2, alpha=0.7, label='Hybrid Spline ')
-  #ax.plot(xx, y_c, color='orange', lw=2, alpha=0.7, label='Classic Spline')
-  #ax.scatter(x,y,color='sienna')
-  #
-  #ax.grid(True)
-  #
-  #ax.legend(loc='best')
-  #
-  #plt.show()
-  #
-  #fig, ax = plt.subplots()
-  #
-  #ax.plot(xx, y_fq, color='steelblue', lw=2, alpha=0.7, label='Full Quantum Spline')
-  #ax.plot(xx, y_c, color='orange', lw=2, alpha=0.7, label='Classic Spline')
-  ##ax.plot(x, y, color='orange', lw=2, alpha=0.7, label='Classic Spline')
-  #ax.scatter(x,y,color='sienna')
-  ##ax.plot(xx,v_norm,color='yellow')
-  #
-  #ax.grid(True)
-  #
-  #ax.legend(loc='best')
-  #plt.show()
-  #
-  #
 
 if __name__=='__main__':
-  train_eval(nq=3, n_step=8, label="sigmoid", MAX_ITER = 100, lower = 0., upper = 1. ,  scaled=False)
+  train_eval(nq=3, n_step=8, label="sigmoid", MAX_ITER = 100, scaled=False)

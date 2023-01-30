@@ -10,9 +10,9 @@ from scipy.interpolate import splrep
 
 def get_func(mode = 'gqs'):
     if(mode == 'gqs') :
-        return  {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':2}, {'sigmoid': sigmoid_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}#'tanh': tanh_t,
+        return  {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':2}, {'sigmoid': sigmoid_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}, 0, 1#'tanh': tanh_t,
     elif(mode == 'vqs'):
-        return {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':-1}, {'sigmoid': sigmoid,'tanh': tanh,'elu': elu, 'relu': relu, 'sin':sin_m}
+        return {'sigmoid': .0,'tanh': 1.0,'elu':0, 'relu':.0, 'sin':1}, {'sigmoid': sigmoid,'tanh': tanh,'elu': elu, 'relu': relu, 'sin':sin_o}, -1,1
 
     else:
         raise ArgumentError(f'No mode called {mode}')
@@ -21,6 +21,9 @@ def get_func(mode = 'gqs'):
 
 def sin_m(x,z=2):
     return 1/2*math.sin(x*pi*z)+1/2
+
+def sin_o(x,z=2):
+    return math.sin(x*pi*z)
 
 def elu(z, c = 0, alpha = .3):
 	return c + z if z >= 0 else c + alpha*(math.e**z -1)

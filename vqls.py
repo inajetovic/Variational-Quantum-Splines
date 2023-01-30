@@ -334,9 +334,9 @@ class VQLS:
             #w = np.full(13, np.random., requires_grad=True)
             w = self.__minmaxrand(13, 0, np.pi)
         else:
-            w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
-        #print(f"Starting parameters = {w}")
-        #opt
+            #w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
+            w = self.__minmaxrand(self.n_qubits, 0, np.pi)
+        #
         out = minimize(self.cost_execution, x0=w, method=self.opt, options={"maxiter": max_iter, "tol":0.01})
         out_params = out["x"]
         #print('Final cost function',self.cost_execution(out_params))
@@ -528,6 +528,6 @@ class qProduct():
         #visualization
         if visualize:
             print('Quantum State',res[0])
-            #print(qml.draw_mpl(prod)(params,x))
+            print(qml.draw_mpl(prod)(params,x));
         #print(res)
         return res[0].real  

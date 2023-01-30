@@ -15,7 +15,7 @@ def multiple_experiment(nq, path, stp, max_iter, experiment_number, func):
         #import os
         #if os.path.isfile(path):
         #    os.remove(path)
-        print(df.dtypes)
+        #print(df.dtypes)
         df.to_json(path)
         #res.append(train_eval(el[0],el[1], func, max_iter ), ignore_index = True)
 

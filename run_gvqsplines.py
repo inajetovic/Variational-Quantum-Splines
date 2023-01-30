@@ -2,7 +2,6 @@ from gvqsplines_v2 import train_eval
 import pandas as pd
 
 def multiple_experiment(nq, path, max_iter, experiment_number, func):
-    res = []
     import os 
     pnq = {'3':(3,8),
           '4':(4,16)}
@@ -15,17 +14,8 @@ def multiple_experiment(nq, path, max_iter, experiment_number, func):
             df = pd.read_json(path)
             df = pd.concat([df, pd.DataFrame([train_eval(el[0],el[1], func, max_iter )])], ignore_index = True)
         
-        #import os
-        #if os.path.isfile(path):
-        #    os.remove(path)
         df.to_json(path)
-        #res.append(train_eval(el[0],el[1], func, max_iter ), ignore_index = True)
 
-
-    #df = pd.DataFrame(res)
-    
-
-    #df.to_json(path)
 
 
 if __name__=='__main__':   
@@ -40,7 +30,7 @@ if __name__=='__main__':
         - -h \t\tOutputs list of possible parameters\n\
         \n \
         Running the script without any parameter is the same as running:\n \
-        python exper_run.py -sp results.json -mi 300 -en 25 -func sigmoid -nq 3')
+        python run_gvqsplines.py -sp results.json -mi 300 -en 25 -func sigmoid -nq 3')
         exit()
     if '-mi' in sys.argv:
         mi = sys.argv[sys.argv.index("-mi")+1]

@@ -7,10 +7,9 @@ from vqls import *
 import time
 
 
-def train_eval(nq, n_step, label, MAX_ITER = 100, lower = -1, upper = 1. , scaled=False, verbose = False):
+def train_eval(nq, n_step, label, MAX_ITER = 100, verbose = False):
     optimizer='COBYLA'
-    func_out = {'sigmoid': sigmoid,'tanh': tanh,'elu': elu, 'relu': relu, 'sin':sin_m}
-    func_dict = {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':-1}
+    func_dict, func_out, lower, upper = get_func('vqs')
     step = (upper-lower)/n_step
     result = {}
 
@@ -33,10 +32,8 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = -1, upper = 1. , scale
     Y = []
     q_weights=[]
     c_coeff=[]
-    beta_q=[]
-    v_norms=[]
     k_list=[]
-    tr_cost = []
+    tr_costs =[]
 
     for i in range(1, len(x)):
         eq1 = pd.Series([1, x[i - 1]])
@@ -51,14 +48,13 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = -1, upper = 1. , scale
     start = time.time()
 
     for i in range(len(M)):
-        print(i, end=' ')
+
         matrix = M[i]
         vector = Y[i]
         if vector == [0.0, 0.0]:
             #y = [el + 10 ** -4 for el in y]
             vector = [.000001, 0.00001] # the relu case
         v_norm = vector/np.linalg.norm(vector)
-        v_norms.append(np.linalg.norm(vector))
         k_numb=np.linalg.cond(np.array(matrix))
         k_list.append(k_numb)
 
@@ -72,10 +68,11 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = -1, upper = 1. , scale
 
         vqls_circuit = VQLS(matrix,v_norm,nq,opt=optimizer) 
         weights = vqls_circuit.train(max_iter=MAX_ITER) 
-        tr_cost = vqls_circuit.cost_vals
+        tr_costs.append(vqls_circuit.cost_vals)
         q_weights.append(vqls_circuit.weight_history[-1])
         c = np.linalg.solve(matrix,vector)
         c_coeff.append(c)
+        
 
         if verbose:
             print("Variational Circuit's weights:",weights)
@@ -110,11 +107,19 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, lower = -1, upper = 1. , scale
     result['rmse'] = math.sqrt(np.square(np.subtract(y,qc_full)).mean())
     result['RSS_q']= np.sum(np.square(np.array(y) - np.array(qc_full))).item()
     result['weights'] = q_weights
-    result["training_cost"] = tr_cost
+    result["training_cost"] = tr_costs
     result['seed'] = vqls_circuit.rng_seed
-
+    fig, ax = plt.subplots()
+    #print(f"X has len {len(X)} and is {X}")
+    #print(f"y has len {len(y)} and is {y}")
+    #print(f"x has len {len(x)} and is {x}")
+    #print(f"tr_costs has len {len(tr_costs)} and is {tr_costs}")
+    #ax.plot(x,qc_full)
+    #ax.plot(x, y )
+    #ax1 = ax.twinx()
+    #ax1.scatter([b[0] for b in X], [u[-1] for u in tr_costs])
     return result
 
 
 if __name__=='__main__':
-  train_eval(nq=1, n_step=20, label="sigmoid", MAX_ITER = 100)
+  train_eval(nq=1, n_step=20, label="sin", MAX_ITER = 100)
