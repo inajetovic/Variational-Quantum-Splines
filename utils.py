@@ -12,7 +12,7 @@ def get_func(mode = 'gqs'):
     if(mode == 'gqs') :
         return  {'sigmoid': .0,'tanh': 1.0,'elu':.12, 'relu':.0, 'sin':2}, {'sigmoid': sigmoid_t,'elu': elu_t, 'relu': relu_t, 'sin':sin_m}, 0, 1#'tanh': tanh_t,
     elif(mode == 'vqs'):
-        return {'sigmoid': .0,'tanh': 1.0,'elu':0, 'relu':.0, 'sin':1}, {'sigmoid': sigmoid,'tanh': tanh,'elu': elu, 'relu': relu, 'sin':sin_o}, -1,1
+        return {'sigmoid': .0,'tanh': 1.0,'elu':0, 'relu':0, 'sin':1}, {'sigmoid': sigmoid,'tanh': tanh,'elu': elu, 'relu': relu, 'sin':sin_o}, -1,1
 
     else:
         raise ArgumentError(f'No mode called {mode}')

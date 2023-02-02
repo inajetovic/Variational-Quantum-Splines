@@ -17,7 +17,6 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, verbose = False):
     # function specific 
     f_i = func_dict[label]
 
-    #TODO THE FUCK IS FE
     f_e = f_i
 
     func = func_out[label]
@@ -34,7 +33,7 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, verbose = False):
     c_coeff=[]
     k_list=[]
     tr_costs =[]
-
+    seeds = []
     for i in range(1, len(x)):
         eq1 = pd.Series([1, x[i - 1]])
         eq2 = pd.Series([1, x[i]])
@@ -72,7 +71,7 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, verbose = False):
         q_weights.append(vqls_circuit.weight_history[-1])
         c = np.linalg.solve(matrix,vector)
         c_coeff.append(c)
-        
+        seeds.append(vqls_circuit.rng_seed)
 
         if verbose:
             print("Variational Circuit's weights:",weights)
@@ -108,16 +107,7 @@ def train_eval(nq, n_step, label, MAX_ITER = 100, verbose = False):
     result['RSS_q']= np.sum(np.square(np.array(y) - np.array(qc_full))).item()
     result['weights'] = q_weights
     result["training_cost"] = tr_costs
-    result['seed'] = vqls_circuit.rng_seed
-    fig, ax = plt.subplots()
-    #print(f"X has len {len(X)} and is {X}")
-    #print(f"y has len {len(y)} and is {y}")
-    #print(f"x has len {len(x)} and is {x}")
-    #print(f"tr_costs has len {len(tr_costs)} and is {tr_costs}")
-    #ax.plot(x,qc_full)
-    #ax.plot(x, y )
-    #ax1 = ax.twinx()
-    #ax1.scatter([b[0] for b in X], [u[-1] for u in tr_costs])
+    result['seed'] = seeds
     return result
 
 

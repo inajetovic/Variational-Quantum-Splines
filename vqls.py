@@ -336,7 +336,6 @@ class VQLS:
         else:
             #w = self.q_delta * np.random.randn(self.n_qubits, requires_grad=True)
             w = self.__minmaxrand(self.n_qubits, 0, np.pi)
-        #
         out = minimize(self.cost_execution, x0=w, method=self.opt, options={"maxiter": max_iter, "tol":0.01})
         out_params = out["x"]
         #print('Final cost function',self.cost_execution(out_params))
