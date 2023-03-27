@@ -48,7 +48,7 @@ The saved file is a Dataset containing the following features:
 - RSS_h `float`
 - seed `int`
 
-### Launch multiple experiments GQSplines
+### Launch multiple experiments VQSplines
 
 Run the ``` run_vqsplines.py ``` script with the fololowing command line paramters
 - ``` -sp ``` name of the saving file and path (NOTE the results will be saved with json formatting)
